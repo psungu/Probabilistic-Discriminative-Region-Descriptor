@@ -1,0 +1,71 @@
+#include <R.h>
+#include <stdio.h>
+#include <math.h>
+void compute_shapelet_distance(double *series, double *shapelet, 
+				int *nseries,  int *lenseries, int *nshapelet, 
+				int *lenshapelet, int *maxlenshapelet, double *result, int *location){
+
+	int i, k, m, l, cnt, locate;
+	double minsim, tempsim;
+	//double sx,sxy,avx,avy,sy;
+	//, double *extrainfo
+	for(i=0;i<*nshapelet;i++){
+	//	Rprintf("Shapelet %d\n",i);
+	//	avx=(lenshapelet[i]+1)/2;
+	//	sx=0;
+	//	for(k=0;k<lenshapelet[i];k++){
+	//		sx=sx+pow((k-avx),2);
+	//	}
+		for(k=0;k<*nseries;k++){
+			minsim=100000;
+	//		Rprintf("T.S. %d\t",k);
+			locate=0;
+Rprintf("0");
+			for(l=0;l<(*lenseries-lenshapelet[i]+1);l++){
+				tempsim=0;
+				cnt=0;	
+				Rprintf("1");
+
+				for(m=0;m<lenshapelet[i];m++){
+					Rprintf("2");
+
+					if(shapelet[*maxlenshapelet*i+m]!=-999){
+Rprintf("5");
+						tempsim=tempsim+pow(shapelet[*maxlenshapelet*i+m]-series[*lenseries*k+l+cnt],2);
+						if(tempsim>=minsim){
+							break;
+						}  
+					}
+					cnt++;
+				}
+				if(tempsim<minsim) {
+					minsim=tempsim;	
+					locate=l+1;
+				}			
+			}
+		//	avy=0;
+		//	for(m=locate-1;m<locate+lenshapelet[i]-1;m++){
+		//		avy=avy+series[*lenseries*k+m];
+		//	}
+		//	avy=avy/lenshapelet[i];
+			
+		//	sy=0;
+		//	sxy=0;
+		//	for(m=locate-1;m<locate+lenshapelet[i]-1;m++){
+		//	   sy=sy+pow((series[*lenseries*k+m]-avy),2);
+		//	   sxy=sxy+((m-locate+2-avx)*(series[*lenseries*k+m]-avy));                        
+		//	}	
+		//	sy=sy/(lenshapelet[i]-1);	//variance of the values
+ 	
+		//	extrainfo[(*nseries*(i*3))+k]=sxy/sx;
+		//	extrainfo[(*nseries*(i*3+1))+k]=avy;
+		//	extrainfo[(*nseries*(i*3+2))+k]=sy;
+		//	Rprintf('%d',i);
+			location[*nseries*i+k]=locate;
+			result[*nseries*i+k]=minsim;
+			
+		}
+//		Rprintf("\n",i);		
+	}
+}
+
